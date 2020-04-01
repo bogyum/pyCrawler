@@ -1,0 +1,59 @@
+{
+	"Categories" : [
+		{
+			"id": 0,
+			"subject": "Top Stories",
+			"target": "disabled"
+		},
+		{
+			"id": 1,
+			"subject": "World",
+			"target": "enabled"
+		},
+		{
+			"id": 2,
+			"subject": "Nat'l/Politics",
+			"target": "enabled"
+		},
+		{
+			"id": 3,
+			"subject": "Economy",
+			"target": "enabled"
+		},
+		{
+			"id": 4,
+			"subject": "North Korea",
+			"target": "disabled"
+		},
+		{
+			"id": 5,
+			"subject": "IT/Science",
+			"target": "enabled"
+		},
+		{
+			"id": 6,
+			"subject": "Sports",
+			"target": "enabled"
+		},
+		{
+			"id": 7,
+			"subject": "Life/Culture",
+			"target": "enabled"
+		},
+		{
+			"id": 8,
+			"subject": "Weather",
+			"target": "enabled"
+		},
+		{
+			"id": 9,
+			"subject": "Foreign Policy",
+			"target": "enabled"
+		},
+		{
+			"id": 11,
+			"subject": "COVID-19",
+			"target": "enabled"
+		}
+	]
+}
