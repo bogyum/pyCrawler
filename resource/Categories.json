@@ -18,7 +18,7 @@
 		{
 			"id": 3,
 			"subject": "Economy",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 4,
@@ -28,27 +28,27 @@
 		{
 			"id": 5,
 			"subject": "IT/Science",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 6,
 			"subject": "Sports",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 7,
 			"subject": "Life/Culture",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 8,
 			"subject": "Weather",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 9,
 			"subject": "Foreign Policy",
-			"target": "disabled"
+			"target": "enabled"
 		},
 		{
 			"id": 11,

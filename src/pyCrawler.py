@@ -1,7 +1,6 @@
-import json
-import sys
-import datefinder
-import logging
+# -*- coding: utf8 -*-
+
+import json, sys, datefinder, logging, logging.handlers
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
@@ -106,13 +105,14 @@ def getWebDriver():
     return driver
 
 # Log setting
-def setLogging():
+def setLoggingConsole():
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
+def setLoggingFile(fileName):
+    logging.basicConfig(filename=fileName, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 # main function
 if __name__ == "__main__":
-
-    setLogging()
 
     # Program argument setting
     #   argument :: dev environment, crawling - date
@@ -121,15 +121,17 @@ if __name__ == "__main__":
         logging.error("  allowd argument :: (SERVER) (DATE) [LOG_FILE]")
         logging.error("                     (LOCAL | DEV | TEST) (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
         exit()
+    elif len(sys.argv) == 3:
+        setLoggingConsole()
     elif len(sys.argv) == 4:
-        logging.basicConfig(filename=sys.argv[3])
+        setLoggingFile(sys.argv[3])
 
     devEnvironment = sys.argv[1]
     crawlingDate = sys.argv[2]
 
     # 환경 설정 파일 로딩
     logging.info("main() - Load config file")
-    with open('./config/config.json', 'r') as configFile:
+    with open('/home/jarvis/work/pyCrawler/config/config.json', 'r') as configFile:
         config = json.load(configFile)
 
     # Chrome driver file path
@@ -152,6 +154,7 @@ if __name__ == "__main__":
     # 특수 문자 예외 처리 필요 --> ', ", /, `, {, }, [, ] 등 json에서 허용되지 않는 문자 제거
     logging.info("main() - Start to do crawling")
     resultList = doCrawling(driver, requestPages)
+    driver.close()
 
     # file writing
     logging.info("main() - File writing")

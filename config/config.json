@@ -4,7 +4,7 @@
     "TargetUrlPrefix" : "http://arirang.com",
     "TargetUrlMain": "News/News_List.asp?sys_lang=Eng&category=",
     "ResourceFile": "Categories.json",
-    "CrawledDataFile": "arirangNews_%subject.json"
+    "CrawledDataFile": "%subject_news.arirang.json"
   },
   "LOCAL": {
     "ChromeDriverPath": "/Users/jarvis/work/pyCrawler/resource/mac_driver",
