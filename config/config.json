@@ -3,22 +3,22 @@
     "ChromeDriver": "chromedriver",
     "TargetUrlPrefix" : "http://arirang.com",
     "TargetUrlMain": "News/News_List.asp?sys_lang=Eng&category=",
-    "ResourceFile": "categories.json",
-    "CrawledDataFile": "arirangNews_%subject_%date.json"
+    "ResourceFile": "Categories.json",
+    "CrawledDataFile": "arirangNews_%subject.json"
   },
   "LOCAL": {
-    "ChromeDriverPath": "/Users/jarvis/work/pyCrawler/resource",
+    "ChromeDriverPath": "/Users/jarvis/work/pyCrawler/resource/mac_driver",
     "ResourcePath": "/Users/jarvis/work/pyCrawler/resource",
-    "CrawledDataPath": "/Users/jarvis/work/pyCrawler/result"
+    "CrawledDataPath": "/Users/jarvis/work/pyCrawler/result/%date"
   },
   "DEV": {
-    "ChromeDriverPath": "/home/jarvis/app",
+    "ChromeDriverPath": "/home/jarvis/work/pyCrawler/resource/ubuntu_driver",
     "ResourcePath": "/home/jarvis/work/pyCrawler/resource",
-    "CrawledDataPath": "/home/jarvis/work/pyCrawler/result"
+    "CrawledDataPath": "/home/jarvis/work/pyCrawler/result/%date"
   },
   "TEST": {
     "ChromeDriverPath": "/home/jarvis_python/app",
     "ResourcePath": "/home/jarvis_python/work/pyCrawler/resource",
-    "CrawledDataPath": "/home/jarvis_python/work/pyCrawler/result"
+    "CrawledDataPath": "/home/jarvis_python/work/pyCrawler/result/%date"
   }
 }
