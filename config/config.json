@@ -1,7 +1,8 @@
 {
   "DEFAULT": {
     "ChromeDriver": "chromedriver",
-    "TargetUrl": "http://arirang.com/News/News_List.asp?sys_lang=Eng&category=",
+    "TargetUrlPrefix" : "http://arirang.com",
+    "TargetUrlMain": "News/News_List.asp?sys_lang=Eng&category=",
     "ResourceFile": "categories.json",
     "CrawledDataFile": "arirangNews_%subject_%date.json"
   },

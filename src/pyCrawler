@@ -5,60 +5,101 @@ from selenium import webdriver
 
 chromeDriverFile = ""
 crawlingDate = ""
+devEnvironment = ""
 
-def OpenTargetUrl(subject, url):
+# Do crawling
+# [ { "subject" : subject, "urls" : [ "urls", "xxx", ... ] } ]
+def doCrawling(driver, requestList) :
+    for jsonList in requestList:
+        #jsonList["subject"]
+        for url in jsonList["urls"] :
+            
 
-    option = webdriver.ChromeOptions()
-    option.headless = True;
-    option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
-    driver = webdriver.Chrome(chromeDriverFile, options=option)
-
-    driver.get(url)
-    driver.implicitly_wait(3)
+# Contents main page open
+def getContentsUrls(driver, url):
+    driver = openWebUrl(driver, url)
 
     contents_list = driver.find_element_by_xpath('//*[@id="aNews_List"]/ul')
     contents = contents_list.find_elements_by_tag_name('li')
 
+    urlList = []
     for content in contents:
         newsDate = list(datefinder.find_dates(str(content.find_element_by_xpath('//a/div').text)))
         if newsDate == crawlingDate:
-            content.click()
-            
-
+            urlList.append(content.find_element_by_xpath('//a').get_attribute('href').text)
+    return urlList
 
 # 크롤링 타겟 설정
-def MakeRequest(targetCategoriesFile, targetURL):
+def makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain):
+    # Target category loading
+    targetMainPage = []
+    targetMainPageList = []
+
     with open(targetCategoriesFile, 'r') as target:
         categories = json.load(target)
 
+    # 카테고리 설정된 크롤링 대상 카테고리 페이지 로딩
     for categories in categories["Categories"]:
         if categories["target"] == "enabled":
-            url = targetURL + str(categories["id"])
+            # 카테고리별 메인 페이지
+            categoryMainUrl = targetURLPrefix + "/" + targetURLMain + str(categories["id"])
+            # 카테고리 주제
             subject = categories["subject"]
 
-            print("url" + url)
-            print("subject" + subject)
+            # targetMainPage setting
+            targetMainPage["subject"] = subject
+            targetMainPage["urls"] = getContentsUrls(driver, categoryMainUrl)
 
-            OpenTargetUrl(subject, url)
+            targetMainPageList.append(json.dump(targetMainPageList))
+
+    return targetMainPageList
+
+def openWebUrl(driver, url):
+    driver.get(url)
+    driver.implicitly_wait(3)
+    return driver
+
+# 웹 드라이버 셋팅
+def getWebDriver():
+    option = webdriver.ChromeOptions()
+    option.headless = True;
+    option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+    driver = webdriver.Chrome(chromeDriverFile, options=option)
+    return driver
 
 # main function
 if __name__ == "__main__":
 
     # Program argument setting
-    #   argument :: crawling - date
+    #   argument :: dev environment, crawling - date
+    if sys.argv.count() != 2:
+        exit()
 
+    devEnvironment = sys.argv[0]
+    crawlingDate = sys.argv[1]
 
     # 환경 설정 파일 로딩
     with open('../config/config.json', 'r') as configFile:
         config = json.load(configFile)
 
-    chromeDriverFile = config["LOCAL"]["ChromeDriverPath"] + "/" + config["DEFAULT"]["ChromeDriver"]
+    # Chrome driver file path
+    chromeDriverFile = config[devEnvironment]["ChromeDriverPath"] + "/" + config["DEFAULT"]["ChromeDriver"]
+    # Crawling target site
+    targetURLPrefix = config["DEFAULT"]["TargetUrlPrefix"]
+    targetURLMain = config["DEFAULT"]["TargetUrlMain"]
+    # Crawling target category resource file
+    targetCategoriesFile = config[devEnvironment]["ResourcePath"] + "/" + config["DEFAULT"]["ResourceFile"]
 
-    targetURL = config["DEFAULT"]["TargetUrl"]
-    targetCategoriesFile = config["LOCAL"]["ResourcePath"] + "/" + config["DEFAULT"]["ResourceFile"]
+    # Web driver open
+    driver = getWebDriver()
 
-    MakeRequest(targetCategoriesFile, targetURL)
-    
-    
-    
-    
+    # Make request page
+    requestPages = makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain)
+
+    # crawling
+    result = doCrawling(driver, requestPages)
+
+    # file writing
+
+    # File close
+    configFile.close()
