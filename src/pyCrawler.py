@@ -17,16 +17,18 @@ def getDictionary( key, value ):
 #   requestList = [ { "subject" : subject, "urls" : [ "urls", "xxx", ... ] } ]
 #   result = [ { "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ],
 #              "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ], ... } ]
-def doCrawling(driver, requestList):
+def doCrawling(requestList):
     index = 0
     result = []
     for jsonList in requestList:
         contents = []
         for url in jsonList["urls"] :
-            driver.get(url)
-            driver.implicitly_wait(3)
 
             sourceURL = getDictionary("sourceURL", url)
+
+            #logging.info("main() - Generate web driver instance")
+            driver = getWebDriver(sourceURL)
+
             headline = getDictionary("headline", driver.find_element_by_xpath('//*[@id="aNews_View"]/h2').text)
             context = getDictionary("context", driver.find_element_by_xpath('//*[@id="newsText"]').text)
 
@@ -34,6 +36,7 @@ def doCrawling(driver, requestList):
             sourceURL.update(context)
 
             contents.append(sourceURL)
+            driver.close()
 
         subject = getDictionary("subject", jsonList["subject"])
         date = getDictionary("crawlingDate", crawlingDate)
@@ -49,12 +52,10 @@ def doCrawling(driver, requestList):
     return result
 
 # Contents main page open
-def getContentsUrls(driver, url):
+def getContentsUrls(url):
 
     try:
-        driver.get(url)
-        driver.implicitly_wait(3)
-
+        driver = getWebDriver()
         contents_list = driver.find_element_by_xpath('//*[@id="aNews_List"]/ul')
         contents = contents_list.find_elements_by_tag_name('li')
 
@@ -65,13 +66,14 @@ def getContentsUrls(driver, url):
             newsDate = str(list(datefinder.find_dates(str(content.find_element_by_xpath('//a/div[@class="aNews_date"]').text)))[0]).split()[0]
             if newsDate == crawlingDate:
                 urlList.append(content.find_element_by_css_selector('a').get_attribute('href'))
+        driver.close()
     except NoSuchElementException:
         logging.WARNING("Element exception  ::  " + url)
 
     return urlList
 
 # 크롤링 타겟 설정
-def makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain):
+def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
     # Target category loading
     targetMainPageList = []
 
@@ -87,7 +89,7 @@ def makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain):
 
             # targetMainPage setting
             dictSubject = getDictionary("subject", categories["subject"])
-            dictUrls = getDictionary("urls", getContentsUrls(driver, categoryMainUrl))
+            dictUrls = getDictionary("urls", getContentsUrls(categoryMainUrl))
 
             dictSubject.update(dictUrls)
             targetMainPageList.append(dictSubject)
@@ -97,11 +99,17 @@ def makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain):
     return targetMainPageList
 
 # 웹 드라이버 셋팅
-def getWebDriver():
+def getWebDriver(url):
     option = webdriver.ChromeOptions()
     option.headless = True;
     option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
     driver = webdriver.Chrome(chromeDriverFile, options=option)
+
+    # Web driver open
+    logging.info("getWebDriver() - open url :: " + url)
+    driver.get(url)
+    driver.implicitly_wait(3)
+
     return driver
 
 # Log setting
@@ -142,19 +150,14 @@ if __name__ == "__main__":
     # Crawling target category resource file
     targetCategoriesFile = config[devEnvironment]["ResourcePath"] + "/" + config["DEFAULT"]["ResourceFile"]
 
-    # Web driver open
-    logging.info("main() - Generate web driver instance")
-    driver = getWebDriver()
-
     # Make request page
     logging.info("main() - Make request pages")
-    requestPages = makeRequest(driver, targetCategoriesFile, targetURLPrefix, targetURLMain)
+    requestPages = makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain)
 
     # crawling
     # 특수 문자 예외 처리 필요 --> ', ", /, `, {, }, [, ] 등 json에서 허용되지 않는 문자 제거
     logging.info("main() - Start to do crawling")
-    resultList = doCrawling(driver, requestPages)
-    driver.close()
+    resultList = doCrawling(requestPages)
 
     # file writing
     logging.info("main() - File writing")
@@ -162,7 +165,7 @@ if __name__ == "__main__":
         try:
             fileName = str(config["DEFAULT"]["CrawledDataFile"]).replace('%subject', result['subject']).replace('/', ' and ')
             fw = open( str(config[devEnvironment]["CrawledDataPath"]).replace('%date', result['crawlingDate']) + "/" + fileName, 'w')
-            fw.write( json.dumps(result) )
+            fw.write( json.dumps(result, sort_keys=True, indent=4) )
             fw.close()
         except OSError:
             logging.error("File write path error :: " + str(config[devEnvironment]["CrawledDataPath"]).replace('%date', result['crawlingDate']) + "/" + fileName)
