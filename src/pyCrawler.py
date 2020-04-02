@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 chromeDriverFile = ""
 crawlingDate = ""
 devEnvironment = ""
+urlTimeWait = 3
 
 def getDictionary( key, value ):
     jsonDict = {}
@@ -27,7 +28,7 @@ def doCrawling(requestList):
             sourceURL = getDictionary("sourceURL", url)
 
             #logging.info("main() - Generate web driver instance")
-            driver = getWebDriver(sourceURL)
+            driver = getWebDriver(sourceURL, urlTimeWait)
 
             headline = getDictionary("headline", driver.find_element_by_xpath('//*[@id="aNews_View"]/h2').text)
             context = getDictionary("context", driver.find_element_by_xpath('//*[@id="newsText"]').text)
@@ -55,7 +56,7 @@ def doCrawling(requestList):
 def getContentsUrls(url):
 
     try:
-        driver = getWebDriver()
+        driver = getWebDriver(url, urlTimeWait)
         contents_list = driver.find_element_by_xpath('//*[@id="aNews_List"]/ul')
         contents = contents_list.find_elements_by_tag_name('li')
 
@@ -99,7 +100,7 @@ def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
     return targetMainPageList
 
 # 웹 드라이버 셋팅
-def getWebDriver(url):
+def getWebDriver(url, timeWait):
     option = webdriver.ChromeOptions()
     option.headless = True;
     option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
@@ -108,7 +109,7 @@ def getWebDriver(url):
     # Web driver open
     logging.info("getWebDriver() - open url :: " + url)
     driver.get(url)
-    driver.implicitly_wait(3)
+    driver.implicitly_wait(timeWait)
 
     return driver
 
