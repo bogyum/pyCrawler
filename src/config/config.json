@@ -1,0 +1,25 @@
+{
+  "DEFAULT": {
+    "WebDriver": "/chromedriver",
+
+    "ResourcePath": "/resource",
+    "CrawledDataPath": "/result/%date",
+
+    "TargetUrlPrefix" : "http://arirang.com",
+    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category=",
+    "ResourceFile": "/Categories.json",
+    "CrawledDataFile": "/%subject_news.arirang.json"
+  },
+  "LOCAL": {
+    "ProjectHome": "/Users/jarvis/work/pyCrawler",
+    "WebDriverPath": "/mac_driver"
+  },
+  "DEV": {
+    "ProjectHome": "/home/jarvis/work/pyCrawler",
+    "WebDriverPath": "/ubuntu_driver"
+  },
+  "TEST": {
+    "ProjectHome": "/home/jarvis/work/pyCrawler",
+    "WebDriverPath": "/ubuntu_driver"
+  }
+}

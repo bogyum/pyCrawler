@@ -1,0 +1,42 @@
+04/03/2020 01:47:15 PM INFO: main() - Load config file
+04/03/2020 02:09:41 PM INFO: main() - Load config file
+04/03/2020 02:11:19 PM INFO: main() - Load config file
+04/03/2020 02:12:06 PM INFO: main() - Load config file
+04/03/2020 02:12:30 PM INFO: main() - Load config file
+04/03/2020 02:12:30 PM INFO: main() - Make request pages
+04/03/2020 02:12:30 PM INFO: makeRequest() - Do make crawling target page
+04/03/2020 02:12:33 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=1
+04/03/2020 02:12:39 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=1
+04/03/2020 02:12:39 PM INFO: makeRequest() - crawling target address :: {'subject': 'World', 'urls': []}
+04/03/2020 02:12:41 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=2
+04/03/2020 02:12:45 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=2
+04/03/2020 02:12:46 PM INFO: makeRequest() - crawling target address :: {'subject': "Nat'l/Politics", 'urls': []}
+04/03/2020 02:12:47 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=3
+04/03/2020 02:12:52 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=3
+04/03/2020 02:12:53 PM INFO: makeRequest() - crawling target address :: {'subject': 'Economy', 'urls': []}
+04/03/2020 02:12:54 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=5
+04/03/2020 02:12:59 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=5
+04/03/2020 02:12:59 PM INFO: makeRequest() - crawling target address :: {'subject': 'IT/Science', 'urls': []}
+04/03/2020 02:13:01 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=6
+04/03/2020 02:13:06 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=6
+04/03/2020 02:13:06 PM INFO: makeRequest() - crawling target address :: {'subject': 'Sports', 'urls': []}
+04/03/2020 02:13:08 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=7
+04/03/2020 02:13:12 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=7
+04/03/2020 02:13:12 PM INFO: makeRequest() - crawling target address :: {'subject': 'Life/Culture', 'urls': []}
+04/03/2020 02:13:14 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=8
+04/03/2020 02:13:19 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=8
+04/03/2020 02:13:19 PM INFO: makeRequest() - crawling target address :: {'subject': 'Weather', 'urls': []}
+04/03/2020 02:13:21 PM INFO: getWebDriver() - open url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=9
+04/03/2020 02:13:25 PM INFO: getContentsUrls() - url :: http://arirang.com//News/News_List.asp?sys_lang=Eng&category=9
+04/03/2020 02:13:26 PM INFO: makeRequest() - crawling target address :: {'subject': 'Foreign Policy', 'urls': []}
+04/03/2020 02:13:26 PM INFO: main() - Start to do crawling
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[0]: {'subject': 'World', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[1]: {'subject': "Nat'l/Politics", 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[2]: {'subject': 'Economy', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[3]: {'subject': 'IT/Science', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[4]: {'subject': 'Sports', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[5]: {'subject': 'Life/Culture', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[6]: {'subject': 'Weather', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: doCrawling() - result[7]: {'subject': 'Foreign Policy', 'crawlingDate': '2020-04-02', 'contents': []}
+04/03/2020 02:13:26 PM INFO: main() - File writing
+04/03/2020 02:13:26 PM INFO: main() - File closing

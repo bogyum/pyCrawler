@@ -1,13 +1,21 @@
 # -*- coding: utf8 -*-
 
-import json, sys, datefinder, logging, logging.handlers
+import json, sys, os, datefinder, logging, logging.handlers
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 chromeDriverFile = ""
 crawlingDate = ""
 devEnvironment = ""
+
+# URL wait time
 urlTimeWait = 3
+
+# Web driver options
+option = webdriver.ChromeOptions()
+option.headless = True;
+option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+
 
 def getDictionary( key, value ):
     jsonDict = {}
@@ -28,7 +36,7 @@ def doCrawling(requestList):
             sourceURL = getDictionary("sourceURL", url)
 
             #logging.info("main() - Generate web driver instance")
-            driver = getWebDriver(sourceURL, urlTimeWait)
+            driver = getWebDriver(sourceURL["sourceURL"], urlTimeWait)
 
             headline = getDictionary("headline", driver.find_element_by_xpath('//*[@id="aNews_View"]/h2').text)
             context = getDictionary("context", driver.find_element_by_xpath('//*[@id="newsText"]').text)
@@ -38,6 +46,7 @@ def doCrawling(requestList):
 
             contents.append(sourceURL)
             driver.close()
+            driver.quit()
 
         subject = getDictionary("subject", jsonList["subject"])
         date = getDictionary("crawlingDate", crawlingDate)
@@ -68,6 +77,7 @@ def getContentsUrls(url):
             if newsDate == crawlingDate:
                 urlList.append(content.find_element_by_css_selector('a').get_attribute('href'))
         driver.close()
+        driver.quit()
     except NoSuchElementException:
         logging.WARNING("Element exception  ::  " + url)
 
@@ -86,7 +96,7 @@ def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
     for categories in categories["Categories"]:
         if categories["target"] == "enabled":
             # 카테고리별 메인 페이지
-            categoryMainUrl = targetURLPrefix + "/" + targetURLMain + str(categories["id"])
+            categoryMainUrl = targetURLPrefix + targetURLMain + str(categories["id"])
 
             # targetMainPage setting
             dictSubject = getDictionary("subject", categories["subject"])
@@ -101,9 +111,7 @@ def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
 
 # 웹 드라이버 셋팅
 def getWebDriver(url, timeWait):
-    option = webdriver.ChromeOptions()
-    option.headless = True;
-    option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+
     driver = webdriver.Chrome(chromeDriverFile, options=option)
 
     # Web driver open
@@ -140,16 +148,20 @@ if __name__ == "__main__":
 
     # 환경 설정 파일 로딩
     logging.info("main() - Load config file")
-    with open('/home/jarvis/work/pyCrawler/config/config.json', 'r') as configFile:
+    with open( os.path.dirname(os.path.realpath(__file__)) + '/config/config.json', 'r') as configFile:
         config = json.load(configFile)
 
     # Chrome driver file path
-    chromeDriverFile = config[devEnvironment]["ChromeDriverPath"] + "/" + config["DEFAULT"]["ChromeDriver"]
+    chromeDriverFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
+                       config[devEnvironment]["WebDriverPath"] + config["DEFAULT"]["WebDriver"]
+
     # Crawling target site
     targetURLPrefix = config["DEFAULT"]["TargetUrlPrefix"]
     targetURLMain = config["DEFAULT"]["TargetUrlMain"]
+
     # Crawling target category resource file
-    targetCategoriesFile = config[devEnvironment]["ResourcePath"] + "/" + config["DEFAULT"]["ResourceFile"]
+    targetCategoriesFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
+                         config["DEFAULT"]["ResourceFile"]
 
     # Make request page
     logging.info("main() - Make request pages")
@@ -162,14 +174,21 @@ if __name__ == "__main__":
 
     # file writing
     logging.info("main() - File writing")
+    fileNamePrefix = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["CrawledDataPath"] + \
+                     config["DEFAULT"]["CrawledDataFile"]
+
     for result in resultList:
         try:
-            fileName = str(config["DEFAULT"]["CrawledDataFile"]).replace('%subject', result['subject']).replace('/', ' and ')
-            fw = open( str(config[devEnvironment]["CrawledDataPath"]).replace('%date', result['crawlingDate']) + "/" + fileName, 'w')
+
+            fileName = fileNamePrefix \
+                .replace('%date', result['crawlingDate'])\
+                .replace('%subject', result['subject'].replace('/', ' and '))\
+
+            fw = open( fileName, 'w')
             fw.write( json.dumps(result, sort_keys=True, indent=4) )
             fw.close()
         except OSError:
-            logging.error("File write path error :: " + str(config[devEnvironment]["CrawledDataPath"]).replace('%date', result['crawlingDate']) + "/" + fileName)
+            logging.error("File write path error :: " + fileName)
             break
 
     # File close
