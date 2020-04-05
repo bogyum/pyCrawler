@@ -4,7 +4,6 @@ Arirang news crawler using python
 
 
 ## Version 0.1.0
-------------------------------------------------------
 
 URL: http://www.arirang.com/News/News_List.asp?sys_lang=Eng&category=?
 
