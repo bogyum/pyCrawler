@@ -4,7 +4,7 @@ Arirang news crawler using python
 URL: http://www.arirang.com/News/News_List.asp?sys_lang=Eng&category=?
 
 1. 실행 방법
-  >> $ProjectHome/script/crawling.sh [개발서버환경] [크롤링뉴스작성날짜] [로그파일명] <
+  '>' $ProjectHome/script/crawling.sh [개발서버환경] [크롤링뉴스작성날짜] [로그파일명] <
      개발서버환경: LOCAL | DEV | TEST  :: $ProjectHome/src/config/config.json 파일에 설정되어 있는 개발환경 구분
      크롤링뉴스작성날짜: 크롤링할 뉴스의 작성 날짜 - yyyy-MM-DD 형식. 예> 2020-04-05
      로그파일명: crawling.sh 에 포함되어 있으므로, 생략
