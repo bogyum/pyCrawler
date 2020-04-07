@@ -1,25 +1,31 @@
 {
   "DEFAULT": {
-    "WebDriver": "/chromedriver",
-
     "ResourcePath": "/resource",
-    "CrawledDataPath": "/result/%date",
-
-    "TargetUrlPrefix" : "http://arirang.com",
-    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category=",
-    "ResourceFile": "/Categories.json",
-    "CrawledDataFile": "/%subject_news.arirang.json"
+    "Crawling" : {
+        "WebDriver": "/chromedriver",
+	    "ResourceFile": "/Categories.json",
+	    "CrawledDataPath": "/result/crawl/%date",
+	    "CrawledDataFile": "/%subject_news.arirang.json",
+	    "TargetUrlPrefix": "http://arirang.com",
+	    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category="
+    }
   },
   "LOCAL": {
-    "ProjectHome": "/Users/jarvis/work/pyCrawler",
-    "WebDriverPath": "/mac_driver"
+    "ProjectHome": "/Users/jarvis/work/pyTrendyWord_DataGenerator",
+    "Crawling": {
+        "WebDriverPath": "/mac_driver"
+    }
   },
   "DEV": {
-    "ProjectHome": "/home/jarvis/work/pyCrawler",
-    "WebDriverPath": "/ubuntu_driver"
+    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "Crawling" : {
+	    "WebDriverPath": "/ubuntu_driver"
+    }
   },
   "TEST": {
-    "ProjectHome": "/home/jarvis/work/pyCrawler",
-    "WebDriverPath": "/ubuntu_driver"
+    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "Crawling": {
+	    "WebDriverPath": "/ubuntu_driver"
+    }
   }
 }

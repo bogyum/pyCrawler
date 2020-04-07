@@ -113,15 +113,15 @@ if __name__ == "__main__":
 
     # Chrome driver file path
     chromeDriverFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
-                       config[devEnvironment]["WebDriverPath"] + config["DEFAULT"]["WebDriver"]
+                       config[devEnvironment]["Crawling"]["WebDriverPath"] + config["DEFAULT"]["Crawling"]["WebDriver"]
 
     # Crawling target site
-    targetURLPrefix = config["DEFAULT"]["TargetUrlPrefix"]
-    targetURLMain = config["DEFAULT"]["TargetUrlMain"]
+    targetURLPrefix = config["DEFAULT"]["Crawling"]["TargetUrlPrefix"]
+    targetURLMain = config["DEFAULT"]["Crawling"]["TargetUrlMain"]
 
     # Crawling target category resource file
     targetCategoriesFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
-                         config["DEFAULT"]["ResourceFile"]
+                         config["DEFAULT"]["Crawling"]["ResourceFile"]
 
     # Crawler Object Generation
     crawler = crawlerClass.Crawler(chromeDriverFile)
@@ -142,8 +142,8 @@ if __name__ == "__main__":
 
     # file writing
     logging.info("main() - File writing")
-    fileNamePrefix = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["CrawledDataPath"] + \
-                     config["DEFAULT"]["CrawledDataFile"]
+    fileNamePrefix = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["Crawling"]["CrawledDataPath"] + \
+                     config["DEFAULT"]["Crawling"]["CrawledDataFile"]
 
     for result in resultList:
         fileName = fileNamePrefix\

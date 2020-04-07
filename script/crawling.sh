@@ -12,7 +12,7 @@ Date=$2
 #CrawlingHome='/home/jarvis/work/pyCrawler' 
 
 #Local server path
-CrawlingHome='/Users/jarvis/work/pyCrawler'
+CrawlingHome='/Users/jarvis/work/pyTrendyWord_DataGenerator'
 CrawlingCode='pyCrawler.py'
 
 #Date=$(date '+%Y-%m-%d' -d '1 day ago')
@@ -22,8 +22,8 @@ fi
 
 Log="${CrawlingHome}/log/$Date.pyCrawler.log"
 
-if [ ! -d "${CrawlingHome}/result/${Date}" ]; then
-	mkdir ${CrawlingHome}/result/${Date}
+if [ ! -d "${CrawlingHome}/result/crawl/${Date}" ]; then
+	mkdir ${CrawlingHome}/result/crawl/${Date}
 fi
 
 echo "ServerName=${ServerName}"
