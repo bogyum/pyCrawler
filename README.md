@@ -1,7 +1,15 @@
 # pyCrawler
 
 Arirang news crawler using python
-
+## Version 0.2.0
+1. Class 분리
+  - 공용 모듈로 사용할만한 함수들을 두 개의 클래스로 나눔 :: Utils, Crawler
+  
+2. webdriver 호출 방법 변경
+  - 객체를 한 번만 생성. URL 만 변경하여 웹페이지 호출
+  
+3. config 파일 위치 변경
+  - 프로젝트 홈으로 config 폴더 
 
 ## Version 0.1.0
 
