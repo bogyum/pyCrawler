@@ -1,73 +1,52 @@
 # -*- coding: utf8 -*-
+import json, sys, os, datefinder, logging
+from selenium.common.exceptions import NoSuchElementException
+import utilsClass, crawlerClass
 
-import json, sys, os, datefinder, logging, logging.handlers
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-
-chromeDriverFile = ""
-crawlingDate = ""
-devEnvironment = ""
-
-# URL wait time
+utils = utilsClass.Utils()
 urlTimeWait = 3
-
-# Web driver options
-option = webdriver.ChromeOptions()
-option.headless = True;
-option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
-
-
-def getDictionary( key, value ):
-    jsonDict = {}
-    jsonDict[key] = value
-    return jsonDict
 
 # Do crawling
 #   requestList = [ { "subject" : subject, "urls" : [ "urls", "xxx", ... ] } ]
 #   result = [ { "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ],
 #              "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ], ... } ]
-def doCrawling(requestList):
-    index = 0
+def doCrawling(requestList, crawler):
+
     result = []
     for jsonList in requestList:
         contents = []
+
+        logging.info("doCrawling() - Crawling target subject :: " + jsonList["subject"])
         for url in jsonList["urls"] :
 
-            sourceURL = getDictionary("sourceURL", url)
+            sourceURL = utils.getDictionary("sourceURL", url)
+            driver = crawler.getWebDriver(sourceURL["sourceURL"])
 
-            #logging.info("main() - Generate web driver instance")
-            driver = getWebDriver(sourceURL["sourceURL"], urlTimeWait)
-
-            headline = getDictionary("headline", driver.find_element_by_xpath('//*[@id="aNews_View"]/h2').text)
-            context = getDictionary("context", driver.find_element_by_xpath('//*[@id="newsText"]').text)
+            headline = utils.getDictionary("headline", driver.find_element_by_xpath('//*[@id="aNews_View"]/h2').text)
+            context = utils.getDictionary("context", driver.find_element_by_xpath('//*[@id="newsText"]').text)
 
             sourceURL.update(headline)
             sourceURL.update(context)
 
             contents.append(sourceURL)
-            driver.close()
-            driver.quit()
+            logging.info("doCrawling() - Crawling done. URL - " + str(sourceURL["sourceURL"]))
 
-        subject = getDictionary("subject", jsonList["subject"])
-        date = getDictionary("crawlingDate", crawlingDate)
-        data = getDictionary("contents", contents)
+        subject = utils.getDictionary("subject", jsonList["subject"])
+        date = utils.getDictionary("crawlingDate", crawlingDate)
+        data = utils.getDictionary("contents", contents)
 
         subject.update(date)
         subject.update(data)
 
         result.append(subject)
-        logging.info("doCrawling() - result[" + str(index) + "]: " + str(subject))
-        index += 1
-
     return result
 
 # Contents main page open
-def getContentsUrls(url):
+def getContentsUrls(url, crawler):
 
     try:
-        driver = getWebDriver(url, urlTimeWait)
-        contents_list = driver.find_element_by_xpath('//*[@id="aNews_List"]/ul')
-        contents = contents_list.find_elements_by_tag_name('li')
+        driver = crawler.getWebDriver(url)
+        contents = driver.find_element_by_xpath('//*[@id="aNews_List"]/ul').find_elements_by_tag_name('li')
 
         logging.info("getContentsUrls() - url :: " + url )
 
@@ -76,20 +55,16 @@ def getContentsUrls(url):
             newsDate = str(list(datefinder.find_dates(str(content.find_element_by_xpath('//a/div[@class="aNews_date"]').text)))[0]).split()[0]
             if newsDate == crawlingDate:
                 urlList.append(content.find_element_by_css_selector('a').get_attribute('href'))
-        driver.close()
-        driver.quit()
     except NoSuchElementException:
         logging.WARNING("Element exception  ::  " + url)
 
     return urlList
 
 # 크롤링 타겟 설정
-def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
+def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain, crawler):
     # Target category loading
     targetMainPageList = []
-
-    with open(targetCategoriesFile, 'r') as target:
-        categories = json.load(target)
+    categories = utils.readJsonFile(targetCategoriesFile)
 
     # 카테고리 설정된 크롤링 대상 카테고리 페이지 로딩
     logging.info("makeRequest() - Do make crawling target page")
@@ -99,34 +74,20 @@ def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain):
             categoryMainUrl = targetURLPrefix + targetURLMain + str(categories["id"])
 
             # targetMainPage setting
-            dictSubject = getDictionary("subject", categories["subject"])
-            dictUrls = getDictionary("urls", getContentsUrls(categoryMainUrl))
+            dictSubject = utils.getDictionary("subject", categories["subject"])
+            dictUrls = utils.getDictionary("urls", getContentsUrls(categoryMainUrl, crawler))
 
             dictSubject.update(dictUrls)
             targetMainPageList.append(dictSubject)
 
             logging.info("makeRequest() - crawling target address :: " + str(dictSubject))
-
     return targetMainPageList
 
-# 웹 드라이버 셋팅
-def getWebDriver(url, timeWait):
-
-    driver = webdriver.Chrome(chromeDriverFile, options=option)
-
-    # Web driver open
-    logging.info("getWebDriver() - open url :: " + url)
-    driver.get(url)
-    driver.implicitly_wait(timeWait)
-
-    return driver
-
-# Log setting
-def setLoggingConsole():
+def setLogging2Console():
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-def setLoggingFile(fileName):
-    logging.basicConfig(filename=fileName, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+def setLogging2File(logFileName):
+    logging.basicConfig(filename=logFileName, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 # main function
 if __name__ == "__main__":
@@ -139,17 +100,16 @@ if __name__ == "__main__":
         logging.error("                     (LOCAL | DEV | TEST) (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
         exit()
     elif len(sys.argv) == 3:
-        setLoggingConsole()
+        setLogging2Console()
     elif len(sys.argv) == 4:
-        setLoggingFile(sys.argv[3])
+        setLogging2File(sys.argv[3])
 
     devEnvironment = sys.argv[1]
     crawlingDate = sys.argv[2]
 
     # 환경 설정 파일 로딩
     logging.info("main() - Load config file")
-    with open( os.path.dirname(os.path.realpath(__file__)) + '/config/config.json', 'r') as configFile:
-        config = json.load(configFile)
+    config = utils.readJsonFile(os.path.dirname(os.path.realpath(__file__)) + '/../config/config.json')
 
     # Chrome driver file path
     chromeDriverFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
@@ -163,14 +123,22 @@ if __name__ == "__main__":
     targetCategoriesFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
                          config["DEFAULT"]["ResourceFile"]
 
+    # Crawler Object Generation
+    crawler = crawlerClass.Crawler(chromeDriverFile)
+    crawler.setURLTimeWait(urlTimeWait)
+
     # Make request page
     logging.info("main() - Make request pages")
-    requestPages = makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain)
+    requestPages = makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain, crawler)
 
-    # crawling
+    # Crawling
     # 특수 문자 예외 처리 필요 --> ', ", /, `, {, }, [, ] 등 json에서 허용되지 않는 문자 제거
     logging.info("main() - Start to do crawling")
-    resultList = doCrawling(requestPages)
+    resultList = doCrawling(requestPages, crawler)
+
+    # Kill crawler driver
+    crawler.driver.close()
+    crawler.driver.quit()
 
     # file writing
     logging.info("main() - File writing")
@@ -178,19 +146,10 @@ if __name__ == "__main__":
                      config["DEFAULT"]["CrawledDataFile"]
 
     for result in resultList:
-        try:
-
-            fileName = fileNamePrefix \
-                .replace('%date', result['crawlingDate'])\
-                .replace('%subject', result['subject'].replace('/', ' and '))\
-
-            fw = open( fileName, 'w')
-            fw.write( json.dumps(result, sort_keys=True, indent=4) )
-            fw.close()
-        except OSError:
-            logging.error("File write path error :: " + fileName)
-            break
+        fileName = fileNamePrefix\
+            .replace('%date', result['crawlingDate'])\
+            .replace('%subject', result['subject'].replace('/', ' and '))
+        utils.writeJsonFile(result, fileName)
 
     # File close
-    logging.info("main() - File closing")
-    configFile.close()
+    logging.info("main() - File closing and done")

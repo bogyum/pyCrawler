@@ -19,6 +19,7 @@ CrawlingCode='pyCrawler.py'
 if [ ! -d "${CrawlingHome}/log" ]; then
 	mkdir ${CrawlingHome}/log
 fi
+
 Log="${CrawlingHome}/log/$Date.pyCrawler.log"
 
 if [ ! -d "${CrawlingHome}/result/${Date}" ]; then
@@ -28,5 +29,5 @@ fi
 echo "ServerName=${ServerName}"
 echo "Date=${Date}"
 
-python3 ${CrawlingHome}/src/${CrawlingCode} ${ServerName} ${Date} ${Log}
+python3 ${CrawlingHome}/src/${CrawlingCode} ${ServerName} ${Date}
 
