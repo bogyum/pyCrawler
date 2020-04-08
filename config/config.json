@@ -8,6 +8,10 @@
 	    "CrawledDataFile": "/%subject_news.arirang.json",
 	    "TargetUrlPrefix": "http://arirang.com",
 	    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category="
+    },
+    "NLPAnalysis" : {
+        "AnalysisResultDataPath" : "/result/nlp/%date",
+        "MAResultDataFile" : "/%subject_news.arirang.ma.json"
     }
   },
   "LOCAL": {

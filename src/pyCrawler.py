@@ -83,13 +83,8 @@ def makeRequest(targetCategoriesFile, targetURLPrefix, targetURLMain, crawler):
             logging.info("makeRequest() - crawling target address :: " + str(dictSubject))
     return targetMainPageList
 
-def setLogging2Console():
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
-
-def setLogging2File(logFileName):
-    logging.basicConfig(filename=logFileName, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
-
 # main function
+# noinspection PyInterpreter
 if __name__ == "__main__":
 
     # Program argument setting
@@ -100,9 +95,9 @@ if __name__ == "__main__":
         logging.error("                     (LOCAL | DEV | TEST) (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
         exit()
     elif len(sys.argv) == 3:
-        setLogging2Console()
+        utilsClass.setLogging2Console()
     elif len(sys.argv) == 4:
-        setLogging2File(sys.argv[3])
+        utilsClass.setLogging2File(sys.argv[3])
 
     devEnvironment = sys.argv[1]
     crawlingDate = sys.argv[2]
