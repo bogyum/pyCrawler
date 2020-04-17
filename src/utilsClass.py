@@ -19,9 +19,6 @@ class Utils:
         return jsonFileList
 
     def readJsonFile(self, fileName):
-
-        logging.info(fileName)
-
         try:
             with open( fileName, 'r') as jsonFile:
                 jsonData = json.load(jsonFile)
