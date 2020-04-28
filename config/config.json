@@ -24,21 +24,21 @@
     }
   },
   "DEV": {
-    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
     "Crawling" : {
 	    "WebDriverPath": "/ubuntu_driver"
     },
     "NLPAnalysis" : {
-      "NLTKPath" : "/Users/jarvis/work/nltk_data"
+      "NLTKPath" : "/home/student/work/nltk_data"
     }
   },
   "TEST": {
-    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
     "Crawling": {
 	    "WebDriverPath": "/ubuntu_driver"
     },
     "NLPAnalysis" : {
-      "NLTKPath" : "/Users/jarvis/work/nltk_data"
+      "NLTKPath" : "/home/student/work/nltk_data"
     }
   }
 }
