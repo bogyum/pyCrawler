@@ -1,41 +1,78 @@
 # NLP Analyzer using NLTK
 # -*- coding: utf8 -*-
-import sys, os, nltk, numpy
-import common
+import sys, os, logging, nltk, numpy
+import utilsClass
+
+utils = utilsClass.Utils()
 
 # NLP analysis using nltk
 #    Needs :: word, pos-tag, count(total, subject)
 
-def analyze(jsonRawData):
-    print("analyze")
+def morphemeAnalysis(text):
+    sentToken = nltk.sent_tokenize(text, "english")
+    for sent in sentToken:
+        # 기사의 날짜와 리포터의 이름은 분석에서 제외
+        if str(sent).find("Updated") > -1 or str(sent).find("Reporter") > -1:
+            continue
+
+        print("sentence :: " + sent)
+        wordTokens = nltk.pos_tag(nltk.word_tokenize(sent))
+        print(wordTokens)
+
+
+
 
 
 if __name__ == '__main__':
 
-    if len(sys.argv) < 4:
-        common.logging.error("Argument error")
-        common.logging.error("  Allowd argument :: (SERVER) (DATE) (RAWDATAFILENAME) (LOGFILE)")
-        common.logging.error("       SERVER: LOCAL | DEV | TEST")
-        common.logging.error("       DATE: yyyy-MM-DD  ex> 2020-04-07")
-        common.logging.error("       RAWDATAFILENAME: Raw data file name  ex> Economy_news.arirang.json")
+    if len(sys.argv) < 3:
+        logging.error("Argument error")
+        logging.error("  Allowd argument :: (SERVER) (DATE) (RAWDATAFILENAME) (LOGFILE)")
+        logging.error("       SERVER: LOCAL | DEV | TEST")
+        logging.error("       DATE: yyyy-MM-DD  ex> 2020-04-07")
+        logging.error("       RAWDATAFILENAME: Raw data file name  ex> Economy_news.arirang.json")
         exit()
     elif len(sys.argv) == 3:
-        common.setLoggingConsole()
+        utilsClass.setLogging2Console()
     else :
-        common.setLoggingFile(sys.argv[3])
+        utilsClass.setLogging2File(sys.argv[3])
 
     # Config file open
-    common.logging.info("main() - Load config file")
-    config = common.jsonFileOpen(os.path.dirname(os.path.realpath(__file__)) + './config/config.json')
+    config = utils.readJsonFile(os.path.dirname(os.path.realpath(__file__)) + '/../config/config.json')
 
     # Raw data file open
-    common.logging.info("main() - Json file open(analysis target) :: " + sys.argv[3])
-    jsonRawData = common.jsonFileOpen(str(config[sys.argv[1]]["RawData"]).replace('%date', sys.argv[2]) + '/' + sys.argv[3])
+    #   :: 분석 대상 파일 리스트 가져오기
+    rawDataPath = config[sys.argv[1]]["ProjectHome"] + str(config["DEFAULT"]["Crawling"]["CrawledDataPath"]).replace("%date", sys.argv[2])
 
-    # NLTK analysis
-    common.logging.info("main() - Text analysis")
-    result = analyze(jsonRawData)
+    # Output file name
+    outputFileName = config["DEFAULT"]["NLPAnalysis"]["AnalysisResultDataPath"] + config["DEFAULT"]["NLPAnalysis"]["MAResultDataFile"]
 
-    # File output
-    common.logging.info("main() - File write")
-    common.writeJsonFile(result, str(config["DEFAULT"]["NLPOutput"]).replace('%date', sys.argv[2]).replace('%subject', sys.argv[3]))
+    # Set nltk path
+    nltk.data.path.append(config[sys.argv[1]]["NLPAnalysis"]["NLTKPath"])
+
+    fileList = utils.getDirFileList(rawDataPath)
+    for file in fileList:
+        jsonRawData = utils.readJsonFile(file)
+
+        logging.info("main() - Analysis target :: " + file)
+        if jsonRawData["contents"] == "[]":
+            logging.info("main() -     No contents data")
+            continue
+
+        nlpResult = []
+        for content in jsonRawData["contents"]:
+            '''nlpResult.append(morphemeAnalysis(content["headline"]))
+            nlpResult.append(morphemeAnalysis(content["context"]))'''
+            morphemeAnalysis(content["headline"])
+            morphemeAnalysis(content["context"])
+
+
+        logging.info("main() -     Done")
+        logging.info("main() - File output :: " + jsonRawData["subject"] + ", " + jsonRawData["crawlingDate"])
+
+        '''utils.writeJsonFile(nlpResult, outputFileName
+                            .replace("%date", sys.argv[2])
+                            .replace("%subject", jsonRawData["subject"])
+                            .replace("\\/", "_")) '''
+
+    logging.info("main() - Analysis Done")

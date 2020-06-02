@@ -8,24 +8,37 @@
 	    "CrawledDataFile": "/%subject_news.arirang.json",
 	    "TargetUrlPrefix": "http://arirang.com",
 	    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category="
+    },
+    "NLPAnalysis" : {
+      "AnalysisResultDataPath" : "/result/nlp/%date",
+      "MAResultDataFile" : "/%subject_news.arirang.ma.json"
     }
   },
   "LOCAL": {
     "ProjectHome": "/Users/jarvis/work/pyTrendyWord_DataGenerator",
     "Crawling": {
         "WebDriverPath": "/mac_driver"
+    },
+    "NLPAnalysis" : {
+      "NLTKPath" : "/Users/jarvis/work/nltk_data"
     }
   },
   "DEV": {
-    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
     "Crawling" : {
 	    "WebDriverPath": "/ubuntu_driver"
+    },
+    "NLPAnalysis" : {
+      "NLTKPath" : "/home/student/work/nltk_data"
     }
   },
   "TEST": {
-    "ProjectHome": "/home/jarvis/work/pyTrendyWord_DataGenerator",
+    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
     "Crawling": {
 	    "WebDriverPath": "/ubuntu_driver"
+    },
+    "NLPAnalysis" : {
+      "NLTKPath" : "/home/student/work/nltk_data"
     }
   }
 }
