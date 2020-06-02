@@ -5,7 +5,6 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="utilsClass" />
-          <option value="crawlerClass" />
         </list>
       </option>
     </inspection_tool>
