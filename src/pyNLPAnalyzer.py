@@ -40,6 +40,10 @@ if __name__ == '__main__':
     # Config file open
     config = utils.readJsonFile(os.path.dirname(os.path.realpath(__file__)) + '/../config/config.json')
 
+
+    # glob.glob(path) --> file list :: 날짜 기준 파일 리스트 모두 가져오기로 변환
+
+
     # Raw data file open
     #   :: 분석 대상 파일 리스트 가져오기
     rawDataPath = config[sys.argv[1]]["ProjectHome"] + str(config["DEFAULT"]["Crawling"]["CrawledDataPath"]).replace("%date", sys.argv[2])
