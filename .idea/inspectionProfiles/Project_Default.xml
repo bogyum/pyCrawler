@@ -6,6 +6,9 @@
         <list>
           <option value="utilsClass" />
           <option value="crawlerClass" />
+          <option value="pyUtilsClass" />
+          <option value="pyCrawlerClass" />
+          <option value="pyNLPClass" />
         </list>
       </option>
     </inspection_tool>

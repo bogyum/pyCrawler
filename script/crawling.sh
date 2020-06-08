@@ -7,15 +7,12 @@ fi
 
 Date=$1
 
-#DEV server path
-#CrawlingHome='/home/jarvis/work/pyCrawler' 
-
-#Local server path
-#CrawlingHome='/Users/jarvis/work/pyTrendyWord_DataGenerator'
+#Local(Mac) path
+CrawlingHome='/Users/jarvis/work/pyTrendyWord_DataGenerator'
 
 #Windows path
-CrawlingHome='/c/work/pyTrendyWord_DataGenerator'
-CrawlingCode='pyCrawler.py'
+#CrawlingHome='/c/work/pyTrendyWord_DataGenerator'
+CrawlingCode='pyCrawling.py'
 
 #Date=$(date '+%Y-%m-%d' -d '1 day ago')
 if [ ! -d "${CrawlingHome}/log" ]; then

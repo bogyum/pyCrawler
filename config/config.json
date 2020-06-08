@@ -2,12 +2,14 @@
   "DEFAULT": {
     "ResourcePath": "/resource",
     "Crawling" : {
+      "ChromeDriver": "/chrome_driver",
       "ResourceFile": "/Categories.json",
-	    "TargetUrlPrefix": "http://arirang.com",
+      "TargetUrlPrefix": "http://arirang.com",
       "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category=",
       "Result": "/result/crawl/%date/%subject_news.arirang.json"
     },
     "NLPAnalysis" : {
+      "Source": "/result/crawl/%date"
     }
   },
   "LOCAL": {
