@@ -89,28 +89,25 @@ if __name__ == "__main__":
 
     # Program argument setting
     #   argument :: dev environment, crawling - date
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         logging.error("argument error")
-        logging.error("  allowd argument :: (SERVER) (DATE) [LOG_FILE]")
-        logging.error("                     (LOCAL | DEV | TEST) (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
+        logging.error("  allowd argument :: (DATE) [LOG_FILE]")
+        logging.error("                     (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
         exit()
-    elif len(sys.argv) == 3:
+    elif len(sys.argv) == 2:
         utilsClass.setLogging2Console()
-    elif len(sys.argv) == 4:
-        utilsClass.setLogging2File(sys.argv[3])
+    elif len(sys.argv) == 3:
+        utilsClass.setLogging2File(sys.argv[2])
 
-    runEnvironment = sys.argv[1]
-    crawlingDate = sys.argv[2]
+    crawlingDate = sys.argv[1]
 
     # 환경 설정 파일 로딩
     logging.info("main() - Load config file")
     config = utils.readJsonFile( utils.getLocalPath() + '/../config/config.json' )
 
     # Chrome driver file path
-    chromeDriverFile = utils.getLocalPath() + '/..' \ 
-                       + config["DEFAULT"]["ResourcePath"] \
-                       + (utils.getPlatform() == 'Darwin' ? '/mac_driver' : '/ubuntu_driver') \
-                       + '/chromedriver'
+    chromeDriverFile = utils.getLocalPath() + '/..' + config["DEFAULT"]["ResourcePath"] + \
+        ( '/mac_driver' if utils.getPlatform() == 'Darwin' else '/ubuntu_driver' ) + '/chromedriver'
 
     # Crawling target site
     targetURLPrefix = config["DEFAULT"]["Crawling"]["TargetUrlPrefix"]
@@ -140,9 +137,8 @@ if __name__ == "__main__":
 
     # file writing
     logging.info("main() - File writing")
-    fileNamePrefix = utils.getLocalPath() \
-                     + config["DEFAULT"]["Crawling"]["CrawledDataPath"] \
-                     + config["DEFAULT"]["Crawling"]["CrawledDataFile"]
+    fileNamePrefix = utils.getLocalPath() + '/..' \
+                     + config["DEFAULT"]["Crawling"]["Result"]
 
     for result in resultList:
         fileName = fileNamePrefix\
