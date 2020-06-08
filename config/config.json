@@ -4,7 +4,8 @@
     "Crawling" : {
       "ResourceFile": "/Categories.json",
 	    "TargetUrlPrefix": "http://arirang.com",
-	    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category="
+      "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category=",
+      "Result": "/result/crawl/%date/%subject_news.arirang.json"
     },
     "NLPAnalysis" : {
     }

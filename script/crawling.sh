@@ -1,12 +1,11 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
-   echo "Usage: $0 [LOCAL|DEV|TEST] [DATE like YYYY-MM-DD]"
+if [ $# -ne 1 ]; then
+   echo "Usage: $0 [DATE like YYYY-MM-DD]"
    exit -1
 fi
 
-ServerName=$1
-Date=$2
+Date=$1
 
 #DEV server path
 #CrawlingHome='/home/jarvis/work/pyCrawler' 
@@ -29,8 +28,5 @@ if [ ! -d "${CrawlingHome}/result/crawl/${Date}" ]; then
 	mkdir -p ${CrawlingHome}/result/crawl/${Date}
 fi
 
-echo "ServerName=${ServerName}"
-echo "Date=${Date}"
-
-python ${CrawlingHome}/src/${CrawlingCode} ${ServerName} ${Date}
+python ${CrawlingHome}/src/${CrawlingCode} ${Date}
 
