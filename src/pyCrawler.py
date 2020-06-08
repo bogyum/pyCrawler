@@ -106,8 +106,8 @@ if __name__ == "__main__":
     config = utils.readJsonFile( utils.getLocalPath() + '/../config/config.json' )
 
     # Chrome driver file path
-    chromeDriverFile = utils.getLocalPath() + '/..' + config["DEFAULT"]["ResourcePath"] + \
-        ( '/mac_driver' if utils.getPlatform() == 'Darwin' else '/ubuntu_driver' ) + '/chromedriver'
+    chromeDriverFile = utils.getLocalPath() + '/..' + config["DEFAULT"]["ResourcePath"] \
+                        + '/chrome_driver' + utils.getPlatform()
 
     # Crawling target site
     targetURLPrefix = config["DEFAULT"]["Crawling"]["TargetUrlPrefix"]
