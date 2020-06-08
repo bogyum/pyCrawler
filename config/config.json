@@ -2,43 +2,20 @@
   "DEFAULT": {
     "ResourcePath": "/resource",
     "Crawling" : {
-        "WebDriver": "/chromedriver",
-	    "ResourceFile": "/Categories.json",
-	    "CrawledDataPath": "/result/crawl/%date",
-	    "CrawledDataFile": "/%subject_news.arirang.json",
+      "ResourceFile": "/Categories.json",
 	    "TargetUrlPrefix": "http://arirang.com",
 	    "TargetUrlMain": "/News/News_List.asp?sys_lang=Eng&category="
     },
     "NLPAnalysis" : {
-      "AnalysisResultDataPath" : "/result/nlp/%date",
-      "MAResultDataFile" : "/%subject_news.arirang.ma.json"
     }
   },
   "LOCAL": {
-    "ProjectHome": "/Users/jarvis/work/pyTrendyWord_DataGenerator",
-    "Crawling": {
-        "WebDriverPath": "/mac_driver"
-    },
-    "NLPAnalysis" : {
-      "NLTKPath" : "/Users/jarvis/work/nltk_data"
-    }
+    "NLTKPath" : "/Users/jarvis/work/nltk_data"
   },
   "DEV": {
-    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
-    "Crawling" : {
-	    "WebDriverPath": "/ubuntu_driver"
-    },
-    "NLPAnalysis" : {
-      "NLTKPath" : "/home/student/work/nltk_data"
-    }
+    "NLTKPath" : "/home/student/work/nltk_data"
   },
   "TEST": {
-    "ProjectHome": "/home/student/work/pyTrendyWord_DataGenerator",
-    "Crawling": {
-	    "WebDriverPath": "/ubuntu_driver"
-    },
-    "NLPAnalysis" : {
-      "NLTKPath" : "/home/student/work/nltk_data"
-    }
+    "NLTKPath" : "/home/student/work/nltk_data"
   }
 }

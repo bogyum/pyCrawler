@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import json, sys, os, datefinder, logging
+import json, sys, datefinder, logging
 from selenium.common.exceptions import NoSuchElementException
 import utilsClass, crawlerClass
 
@@ -99,24 +99,27 @@ if __name__ == "__main__":
     elif len(sys.argv) == 4:
         utilsClass.setLogging2File(sys.argv[3])
 
-    devEnvironment = sys.argv[1]
+    runEnvironment = sys.argv[1]
     crawlingDate = sys.argv[2]
 
     # 환경 설정 파일 로딩
     logging.info("main() - Load config file")
-    config = utils.readJsonFile(os.path.dirname(os.path.realpath(__file__)) + '/../config/config.json')
+    config = utils.readJsonFile( utils.getLocalPath() + '/../config/config.json' )
 
     # Chrome driver file path
-    chromeDriverFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
-                       config[devEnvironment]["Crawling"]["WebDriverPath"] + config["DEFAULT"]["Crawling"]["WebDriver"]
+    chromeDriverFile = utils.getLocalPath() + '/..' \ 
+                       + config["DEFAULT"]["ResourcePath"] \
+                       + (utils.getPlatform() == 'Darwin' ? '/mac_driver' : '/ubuntu_driver') \
+                       + '/chromedriver'
 
     # Crawling target site
     targetURLPrefix = config["DEFAULT"]["Crawling"]["TargetUrlPrefix"]
     targetURLMain = config["DEFAULT"]["Crawling"]["TargetUrlMain"]
 
     # Crawling target category resource file
-    targetCategoriesFile = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["ResourcePath"] + \
-                         config["DEFAULT"]["Crawling"]["ResourceFile"]
+    targetCategoriesFile = utils.getLocalPath() \
+                          + config["DEFAULT"]["ResourcePath"] + \
+                          + config["DEFAULT"]["Crawling"]["ResourceFile"]
 
     # Crawler Object Generation
     crawler = crawlerClass.Crawler(chromeDriverFile)
@@ -137,8 +140,9 @@ if __name__ == "__main__":
 
     # file writing
     logging.info("main() - File writing")
-    fileNamePrefix = config[devEnvironment]["ProjectHome"] + config["DEFAULT"]["Crawling"]["CrawledDataPath"] + \
-                     config["DEFAULT"]["Crawling"]["CrawledDataFile"]
+    fileNamePrefix = utils.getLocalPath() \
+                     + config["DEFAULT"]["Crawling"]["CrawledDataPath"] \
+                     + config["DEFAULT"]["Crawling"]["CrawledDataFile"]
 
     for result in resultList:
         fileName = fileNamePrefix\
