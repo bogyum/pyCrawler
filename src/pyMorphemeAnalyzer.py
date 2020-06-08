@@ -21,6 +21,8 @@ if __name__ == '__main__':
 
     # Config file open
     config = utils.readJsonFile(utils.getLocalPath() + '/../config/config.json')
+
+    NLTKAnalyzer.setLogging(logging)
     NLTKAnalyzer.setNLTKPath( config[sysEnv]["NLTKPath"])
 
     # glob.glob(path) --> file list :: 날짜 기준 파일 리스트 모두 가져오기로 변환
@@ -29,7 +31,7 @@ if __name__ == '__main__':
 
     logging.info("main() - Text analysis")
     for rawTextFile in rawTextFileList:
-        logging.info("main() -   Do analyse %s file" % rawTextFile)
+        logging.info("main() -   %s file" % rawTextFile)
         jsonRawData = utils.readJsonFile(rawTextFile)
         jsonResult = NLTKAnalyzer.doMorphemeAnalysis(jsonRawData)
 

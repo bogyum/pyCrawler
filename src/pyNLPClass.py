@@ -1,24 +1,25 @@
-import nltk
-
+import nltk, logging
 
 class NLPAnalyzer:
 
     def setNLTKPath(self, path):
-        self.NLTKpath = path
+        nltk.data.path.append(path)
+
+    def setLogging(self, logging):
+        self.logging = logging
 
     def doMorphemeAnalysis(self, jsonRawData):
 
-        return None
+        for contents in jsonRawData["contents"]:
+            headLine = contents["headline"]
+            context = str(contents["context"]).replace("\n", ".")
 
+            sentToken = nltk.sent_tokenize(context, "english")
 
-        '''
-        sentToken = nltk.sent_tokenize(text, "english")
-        for sent in sentToken:
-            # 기사의 날짜와 리포터의 이름은 분석에서 제외
-            if str(sent).find("Updated") > -1 or str(sent).find("Reporter") > -1:
-                continue
+            # Need to add progress bar
+            for sentence in sentToken:
+                if str(sentence).find("Updated") > -1 or str(sentence).find("Reporter") > -1:
+                    continue
 
-            print("sentence :: " + sent)
-            wordTokens = nltk.pos_tag(nltk.word_tokenize(sent))
-            print(wordTokens)
-        '''
+                logging.info("      NLPAnalyzer Class() - sentence :: %s" % sentence)
+                wordTokens = nltk.pos_tag(nltk.word_tokenize(sentence))
