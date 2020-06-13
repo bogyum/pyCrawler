@@ -6,12 +6,7 @@ import pyUtilsClass, pyCrawlerClass
 utils = pyUtilsClass.Utils()
 urlTimeWait = 3
 
-# Do crawling
-#   requestList = [ { "subject" : subject, "urls" : [ "urls", "xxx", ... ] } ]
-#   result = [ { "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ],
-#              "subject": "", "crawlingDate": "", "contents": [ { "sourceURL": "", "headline": "", "context": "" }, { ...  }, ... ], ... } ]
 def doCrawling(requestList, crawler):
-
     result = []
     for jsonList in requestList:
         contents = []
