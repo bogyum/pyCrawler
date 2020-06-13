@@ -1,0 +1,40 @@
+CC	coordinating conjunction	and
+CD	cardinal number	1,third
+DT	determiner	the
+EX	existential there	there is
+FW	foreign word	les
+IN	preposition, subordinating, conjunction	in,of,like
+JJ	adjective	green
+JJR	adjective, comparative	greener
+JJS	adjective, superlative	greenest
+LS	list marker	1)
+MD	modal	could, will
+NN	noun, singular or mass	table
+NNS	noun plural	tables
+NP	proper noun, singular	John
+NPS	proper noun, plural	Vikings
+PDT	predeterminer	both the boys(전치한정사)
+POS	possessive ending	friend's(소유격)
+PP	personal pronoun	I, he, it(사람대명사)
+PP$	possessive pronoun	my, his(소유대명사)
+RB	adverb	however, usually, naturally, here, good
+RBR	adverb, comparative	better
+RBS	adverb, superlative	best
+RP	particle	give up
+TO	infinitive 'to'	togo
+UH	interjection	uhhuhhuhh
+VB	verb be, base form	be
+VBD	verb be, past tense	was, were
+VBG	verb be, gerund/present, participle	being
+VBN	verb be, past participle	been
+VBP	verb be, sing. present, non-3d	am, are
+VBZ	verb be, 3rd person sing. present	is
+WDT	wh-determiner	which
+WP	wh-pronoun	who. what
+WP$	possessive wh-pronoun	whose
+WRB	wh-adverb	where, when
+
+------------------------------------------------------------
+
+need to lemmatization
+  J, M, N, P, R, V

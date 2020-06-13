@@ -1,7 +1,11 @@
 # NLP Analyzer using NLTK
 # -*- coding: utf8 -*-
-import sys, logging, glob
+import sys, logging, glob, tqdm
 import pyUtilsClass, pyNLPClass
+
+def setResult(result, arrayData):
+    for word in arrayData:
+        result.append(word)
 
 if __name__ == '__main__':
 
@@ -33,9 +37,21 @@ if __name__ == '__main__':
     for rawTextFile in rawTextFileList:
         logging.info("main() -   %s file" % rawTextFile)
         jsonRawData = utils.readJsonFile(rawTextFile)
-        jsonResult = NLTKAnalyzer.doMorphemeAnalysis(jsonRawData)
 
-        if jsonResult is not None:
+        jsonResult = {}
+        jsonResult['subject'] = jsonRawData['subject']
+        jsonResult['crawlingDate'] = jsonRawData['crawlingDate']
+        jsonResult['headline'] = []
+        jsonResult['context'] = []
+
+        for contents in tqdm.tqdm(jsonRawData["contents"]):
+            headline = str(contents["headline"]).replace('\n', ". ")
+            context = (str(contents["context"]).replace(".\n", ". ")).replace("\n", "")
+
+            setResult(jsonResult['headline'], NLTKAnalyzer.doMorphemeAnalysis(headline))
+            setResult(jsonResult['context'], NLTKAnalyzer.doMorphemeAnalysis(context))
+
+        if jsonResult['headline'] is not None:
             utils.writeJsonFile(jsonResult, rawTextFile.replace("crawl", "NLP"))
 
     logging.info("main() - Done")
