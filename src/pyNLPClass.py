@@ -25,7 +25,7 @@ class NLPAnalyzer:
             # 명사(noun), 동사(verb)
             if str(lemma[1][:1]).lower() in ['n', 'v']:
                 result.append('%s/%s' % (self.lemmatizer.lemmatize(lemma[0], pos=lemma[1][:1].lower()), lemma[1]))
-            # 조동사(modal), 형용사(adjective), 부사(adverb), 접속사(conjunction), 한정사(determiner), 외래어(foreign word), 의문사, 접속부사(wh-determiner,pronoun,adverb)
+            # 조동사(modal), 형용사(adjective), 부사(adverb), 접속사(conjunction), 외래어(foreign word), 의문사, 접속부사(wh-determiner,pronoun,adverb)
             elif str(lemma[1][:1]).lower() in ['m', 'j', 'r', 'c', 'f', 'w']:
                 result.append('%s/%s' % (lemma[0], lemma[1]))
             '''
