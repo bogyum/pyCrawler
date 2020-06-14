@@ -90,9 +90,9 @@ if __name__ == "__main__":
         logging.error("                     (yyyy-mm-dd) [crawling.yyyymmdd.log] ")
         exit()
     elif len(sys.argv) == 2:
-        utilsClass.setLogging2Console()
+        pyUtilsClass.setLogging2Console()
     elif len(sys.argv) == 3:
-        utilsClass.setLogging2File(sys.argv[2])
+        pyUtilsClass.setLogging2File(sys.argv[2])
 
     crawlingDate = sys.argv[1]
 
