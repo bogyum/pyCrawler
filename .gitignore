@@ -2,4 +2,6 @@
 *.log
 *.bak
 
-result/crawl/*
+resource/chrome_driver/*
+result/*
+
