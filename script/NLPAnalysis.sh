@@ -9,7 +9,7 @@ Server=$1
 Date=$2
 
 #Local(Mac) path
-NLPHome='/Users/jarvis/work/pyTrendyWord_DataGenerator'
+NLPHome='/home/student/work/pyTrendyWord_DataGenerator'
 
 #Windows path
 #CrawlingHome='/c/work/pyTrendyWord_DataGenerator'

@@ -8,7 +8,7 @@ fi
 Date=$1
 
 #Local(Mac) path
-CrawlingHome='/Users/jarvis/work/pyTrendyWord_DataGenerator'
+CrawlingHome='/home/student/work/pyTrendyWord_DataGenerator'
 
 #Windows path
 #CrawlingHome='/c/work/pyTrendyWord_DataGenerator'
