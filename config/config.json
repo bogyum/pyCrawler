@@ -9,7 +9,8 @@
       "Result": "/result/crawl/%date/%subject_news.arirang.json"
     },
     "NLPAnalysis" : {
-      "Source": "/result/crawl/%date"
+      "Source": "/result/crawl/%date",
+      "Target": "/result/NLP/%date"
     }
   },
   "LOCAL": {

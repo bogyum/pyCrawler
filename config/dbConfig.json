@@ -1,0 +1,18 @@
+{
+  "LOCAL": {
+    "host": "localhost",
+    "port": "27017",
+    "id": "jarvis",
+    "pw": "qhrua0713!",
+    "database": "TrendyWord",
+    "collection": "WordCount"
+  },
+  "DEV": {
+    "host": "localhost",
+    "port": "27017",
+    "id": "jarvis",
+    "pw": "qhrua0713!",
+    "database": "TrendyWord",
+    "collection": "WordCount"
+  }
+}
