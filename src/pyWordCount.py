@@ -11,8 +11,7 @@ def setDBConnection(dbConfig):
     dao.setCollection(dbConfig["collection"])
     return dao
 
-def countWord(wordList):
-    '''
+'''
         { "book": {
             "postag": ["", ...],
             "count": xxx
@@ -22,8 +21,8 @@ def countWord(wordList):
             "count": xxx
             }, ...
         }
-    '''
-
+'''
+def countWord(wordList):
     wordCountList = {}
     for morph in wordList:
         word = str(morph)[:str(morph).rfind('/')]
@@ -49,23 +48,82 @@ def getPostagList(dbInfo, newData):
             dbInfo.append(tag)
     return json.dumps(dbInfo)
 
-def countWordinDB(date, subject, isHeader, countWordList):
+def getDailyCount(dailyCount, day, count):
+    dailyCount[int(day)-1] += count
+    return dailyCount
+
+def getMonthlyCount(monthlyCount, month, count):
+    monthlyCount[int(month) - 1] += count
+    return monthlyCount
+
+def getSubjectCount(subjectCount, subject, count):
+    subjectCount[subject] += count
+    return subjectCount
+
+'''
+    {
+        "word": "south",
+        "postag": [ "RB", "JJ", "VBP", "NN", "VB", "NNP"],
+        "count": {
+            "totalCount": 114,
+            "headerCount": 3,
+            "yearly": {
+                "2020": xxxx,
+            },
+            "monthly": {
+                "2020": [0,0,0,0,114,0,0,0,0,0]
+            },
+            "daily": {
+                "202005": [0,0,0,0,0,0,0,0,0, ..... ],
+                "202006": [0,0,0,0,0,0,0,0,0, ..... ]
+            },
+            "bySubject": {
+                "Nat'l/Politics": xxx,
+                "Sports": xxx,
+            }
+        }
+    }
+    '''
+# word, postag, count, subject, date,isHeader
+def getInsertData(word, postag, count, subject, date, isHeader, subjectJson):
     year = date.split('-')[0]
     month = date.split('-')[1]
+    day = date.split('-')[2]
+
+    monthlyCount = [0] * 12
+    dailyCount = [0] * 31
+    subjectCount = [0] * 8
+    result = '{"word": "%s", "postag": %s, "count": { "totalCount": %s, "headerCount": %s, "yearly": { "%s": %s }, "monthly": { "%s": %s }, "daily": { "%s": %s }, "bySubject": %s }}' \
+             % (word, json.dumps(postag), count, count if isHeader else 0, year, count, year, getMonthlyCount(monthlyCount, month, count), year+month, getDailyCount(dailyCount, day, count), getSubjectCount(subjectCount, subjectJson[subject], count))
+
+    return result
+
+def getUpdateData(dbInfo, postag, count, subject, date, isHeader, subjectJson):
+    year = date.split('-')[0]
+    month = date.split('-')[1]
+    day = date.split('-')[2]
+
+    result = ('{"$set": {"postag": %s, "count": {"totalCount": %s, "headerCount": %s, "yearly": {"%s": %s}, "monthly": {"%s": %s}, "daily": {"%s": %s}, "bySubject": %s }}}' % \
+              (getPostagList(dbInfo["postag"], postag), dbInfo["count"]["totalCount"] + count, dbInfo["count"]["headerCount"] + count if isHeader else dbInfo["count"]["headerCount"], \
+               year, dbInfo["count"]["yearly"][year] + count, \
+               year, getMonthlyCount(dbInfo["count"]["monthly"][year], month, count), \
+               year+month, getDailyCount(dbInfo["count"]["daily"][year+month], day, count), \
+               getSubjectCount(dbInfo["count"]["bySubject"], subjectJson[subject], count)))
+
+    return result
+
+def countWordinDB(date, subject, isHeader, countWordList, subjectJson):
 
     for wordInfo in countWordList:
         dbInfo = dao.select('{"word": "%s"}' % wordInfo)
 
-        if dbInfo is not None:
-            dbInfo["count"][str(year)][int(month)-1] += int(countWordList[wordInfo]['count'])
-
-            if isHeader:
-                dao.update('{ "word": "%s"}' % wordInfo, '{ "$set": { "postag": %s, "totalCount": %s, "headerCount": %s, "count": { "%s" : %s } } }' % (getPostagList(dbInfo["postag"], countWordList[wordInfo]["postag"]), dbInfo["totalCount"] + int(countWordList[wordInfo]['count']), dbInfo["headerCount"] + int(countWordList[wordInfo]['count']), year, dbInfo["count"][year]))
-            else:
-                dao.update('{ "word": "%s"}' % wordInfo, '{ "$set": { "postag": %s, "totalCount": %s, "count": { "%s" : %s } } }' % (getPostagList(dbInfo["postag"], countWordList[wordInfo]["postag"]), dbInfo["totalCount"] + int(countWordList[wordInfo]['count']), year, dbInfo["count"][year]))
-
+        if dbInfo is None:
+            #insert data
+            # word, postag, count, subject, date,isHeader
+            dao.insert(getInsertData(wordInfo, countWordList[wordInfo]['postag'], int(countWordList[wordInfo]['count']), subject, date, isHeader, subjectJson))
         else:
-            dao.insert('{"word": "%s", "postag": %s, "subject": "%s", "totalCount": %s, "headerCount": %s, "count": { "%s": %s }}' % (wordInfo, json.dumps(countWordList[wordInfo]['postag']), subject, int(countWordList[wordInfo]['count']), int(countWordList[wordInfo]['count']) if isHeader else 0, year, getCountArray(month, int(countWordList[wordInfo]['count']))))
+            #update data
+            dao.update('{"word": "%s"}' % wordInfo, getUpdateData(dbInfo, countWordList[wordInfo]['postag'], int(countWordList[wordInfo]['count']), subject, date, isHeader, subjectJson))
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -89,6 +147,9 @@ if __name__ == '__main__':
     dbConfig = utils.readJsonFile(utils.getLocalPath() + "/../config/" + dbConfigFile)
     dao = setDBConnection(dbConfig[sysEnv])
 
+    # subject json
+    subjectJson = utils.readJsonFile(utils.getLocalPath() + "/../config/subject.json")
+
     for targetFile in NLPFileList:
         jsonTarget = utils.readJsonFile(targetFile)
 
@@ -98,8 +159,8 @@ if __name__ == '__main__':
         crawlingDate = jsonTarget["crawlingDate"]
         subject = jsonTarget["subject"]
 
-        countWordinDB(crawlingDate, subject, False, contextWordCount)
-        countWordinDB(crawlingDate, subject, True, headlineWordCount)
+        countWordinDB(crawlingDate, subject, False, contextWordCount, subjectJson)
+        countWordinDB(crawlingDate, subject, True, headlineWordCount, subjectJson)
 
 
     dao.setClose()

@@ -32,7 +32,7 @@ class DAO:
 
     # 데이터 갱신
     def update(self, query, condition):
-        self.collection.update(json.loads(query), json.loads(condition))
+        self.collection.update(json.loads(query), json.loads(condition), upsert=True)
 
 
 

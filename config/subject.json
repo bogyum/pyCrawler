@@ -1,0 +1,10 @@
+{
+  "Economy": 0,
+  "Foreign Policy": 1,
+  "IT/Science": 2,
+  "Life/Culture": 3,
+  "Nat'l/Politics": 4,
+  "Sports": 5,
+  "Weather": 6,
+  "World": 7
+}
