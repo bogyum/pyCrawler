@@ -11,6 +11,9 @@
     "NLPAnalysis" : {
       "Source": "/result/crawl/%date",
       "Target": "/result/NLP/%date"
+    },
+    "CrawlingDict" : {
+      "TargetUrl": "https://en.dict.naver.com/#/search?query="
     }
   },
   "LOCAL": {

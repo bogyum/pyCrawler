@@ -5,7 +5,10 @@
     "id": "jarvis",
     "pw": "qhrua0713!",
     "database": "TrendyWord",
-    "collection": "WordCount"
+    "collections": {
+      "wordcount": "WordCount",
+      "worddict": "WordDictionary"
+    }
   },
   "DEV": {
     "host": "localhost",
@@ -13,6 +16,9 @@
     "id": "jarvis",
     "pw": "qhrua0713!",
     "database": "TrendyWord",
-    "collection": "WordCount"
+    "collections": {
+      "wordcount": "WordCount",
+      "worddict": "WordDictionary"
+    }
   }
 }

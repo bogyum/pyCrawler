@@ -26,6 +26,10 @@ class DAO:
         result = self.collection.find_one(json.loads(query))
         return result
 
+    def selectMany(self, query, fields):
+        result = self.collection.find(json.loads(query), json.loads(fields))
+        return list(result)
+
     # 데이터 삭제
     def delete(self, query):
         self.collection.delete(query)

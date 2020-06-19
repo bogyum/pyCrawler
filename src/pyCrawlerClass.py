@@ -21,10 +21,12 @@ class Crawler:
         # logging.info("getWebDriver() - open url :: " + url)
         self.driver.get(url)
         self.driver.implicitly_wait(self.urlTimeWait)
-
         return self.driver
 
     def setURLTimeWait(self, urlTimeWait):
         self.urlTimeWait = urlTimeWait
+
+    def closeDriver(self):
+        self.driver.close()
 
 

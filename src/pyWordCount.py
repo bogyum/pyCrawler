@@ -8,7 +8,7 @@ dao = pyDAOClass.DAO()
 def setDBConnection(dbConfig):
     dao.setClient(dbConfig["host"], dbConfig["port"], dbConfig["id"], dbConfig["pw"])
     dao.setDB(dbConfig["database"])
-    dao.setCollection(dbConfig["collection"])
+    dao.setCollection(dbConfig["collections"]["wordcount"])
     return dao
 
 '''
