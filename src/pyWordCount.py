@@ -2,6 +2,8 @@
 # -*- coding: utf8 -*-
 import sys, logging, glob, json, tqdm
 import pyUtilsClass, pyDAOClass
+import nltk
+from nltk.corpus import stopwords
 
 dao = pyDAOClass.DAO()
 
@@ -135,9 +137,18 @@ def doMakeDocument(dbInfo, wordInfo, postag, count, subject, date, isHeader, sub
 
     return dbInfo
 
-def countWordinDB(date, subject, isHeader, countWordList, subjectJson):
+def countWordinDB(stopWords, date, subject, isHeader, countWordList, subjectJson):
 
     for wordInfo in countWordList:
+
+        # stop word elimination
+        if wordInfo in stopWords:
+            continue
+
+        # CD tag elimination
+        if countWordList[wordInfo]['postag'].__contains__('CD'):
+            continue
+
         dbInfo = dao.select({"word": wordInfo}, {"_id": False})
 
         targetData = doMakeDocument(dbInfo, wordInfo, countWordList[wordInfo]['postag'], int(countWordList[wordInfo]['count']), subject, date, isHeader, subjectJson)
@@ -170,6 +181,10 @@ if __name__ == '__main__':
     dbConfig = utils.readJsonFile(utils.getLocalPath() + "/../config/" + dbConfigFile)
     dao = setDBConnection(dbConfig[sysEnv])
 
+    # nltk option
+    nltk.data.path.append(config[sysEnv]["NLTKPath"])
+    stopWords = set(stopwords.words('english'))
+
     # subject json
     subjectJson = utils.readJsonFile(utils.getLocalPath() + "/../config/subject.json")
 
@@ -182,8 +197,8 @@ if __name__ == '__main__':
         crawlingDate = jsonTarget["crawlingDate"]
         subject = jsonTarget["subject"]
 
-        countWordinDB(crawlingDate, subject, False, contextWordCount, subjectJson)
-        countWordinDB(crawlingDate, subject, True, headlineWordCount, subjectJson)
+        countWordinDB(stopWords, crawlingDate, subject, False, contextWordCount, subjectJson)
+        countWordinDB(stopWords, crawlingDate, subject, True, headlineWordCount, subjectJson)
 
 
     dao.setClose()
