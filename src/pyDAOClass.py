@@ -19,15 +19,15 @@ class DAO:
 
     # 신규 데이터 삽입
     def insert(self, query):
-        self.collection.insert_one(json.loads(query))
+        self.collection.insert_one(query)
 
     # 데이터 조회
-    def select(self, query):
-        result = self.collection.find_one(json.loads(query))
+    def select(self, query, fieldCondition):
+        result = self.collection.find_one(query, fieldCondition)
         return result
 
-    def selectMany(self, query, fields):
-        result = self.collection.find(json.loads(query), json.loads(fields))
+    def selectMany(self, query, fieldCondition):
+        result = self.collection.find(query, fieldCondition)
         return list(result)
 
     # 데이터 삭제
@@ -36,7 +36,7 @@ class DAO:
 
     # 데이터 갱신
     def update(self, query, condition):
-        self.collection.update(json.loads(query), json.loads(condition), upsert=True)
+        self.collection.update(query, condition, upsert=True)
 
 
 

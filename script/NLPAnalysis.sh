@@ -24,5 +24,5 @@ if [ ! -d "${NLPHome}/result/NLP/${Date}" ]; then
 	mkdir -p ${NLPHome}/result/NLP/${Date}
 fi
 
-python ${NLPHome}/src/${NLPCode} ${Server} ${Date}
+python3 ${NLPHome}/src/${NLPCode} ${Server} ${Date}
 

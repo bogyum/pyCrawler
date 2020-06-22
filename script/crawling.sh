@@ -7,11 +7,10 @@ fi
 
 Date=$1
 
-#Local(Mac) path
+#DEV path
 CrawlingHome='/home/student/work/pyTrendyWord_DataGenerator'
 
 #Windows path
-#CrawlingHome='/c/work/pyTrendyWord_DataGenerator'
 CrawlingCode='pyCrawling.py'
 
 #Date=$(date '+%Y-%m-%d' -d '1 day ago')
@@ -19,11 +18,8 @@ if [ ! -d "${CrawlingHome}/log" ]; then
 	mkdir -p ${CrawlingHome}/log
 fi
 
-Log="${CrawlingHome}/log/$Date.pyCrawler.log"
-
 if [ ! -d "${CrawlingHome}/result/crawl/${Date}" ]; then
 	mkdir -p ${CrawlingHome}/result/crawl/${Date}
 fi
 
-python ${CrawlingHome}/src/${CrawlingCode} ${Date}
-
+python3 ${CrawlingHome}/src/${CrawlingCode} ${Date}

@@ -19,13 +19,13 @@ def getWordList(dbConfig):
 
     wordList = set()
     dao.setCollection(dbConfig["collections"]["wordcount"])
-    wordList4Count = dao.selectMany('{}', '{"word": 1, "_id": 0}')
+    wordList4Count = dao.selectMany({}, {"word": 1, "_id": 0})
     for info in wordList4Count:
         wordList.add(info["word"])
 
     dictWordList = set()
     dao.setCollection(dbConfig["collections"]["worddict"])
-    wordList4Dict = dao.selectMany('{}', '{"word": 1, "_id": 0}')
+    wordList4Dict = dao.selectMany({}, {"word": 1, "_id": 0})
     for info in wordList4Dict:
         if wordList.__contains__(info["word"]):
             wordList.remove(info["word"])
@@ -34,7 +34,7 @@ def getWordList(dbConfig):
 
 def getCrawling(crawler, url):
 
-    result = {'meaning': [], 'pronounce': '', 'soundLink': ''}
+    result = {'meaning': [], 'pronounce': '', 'soundLink': '', 'exampleText': '', 'exampleKoreanText': ''}
     try:
         driver = crawler.getWebDriver(url)
 
@@ -51,11 +51,17 @@ def getCrawling(crawler, url):
         soundLink = driver.find_element_by_xpath('//*[@id="searchPage_entry"]/div/div[1]/div[1]/ul/li[1]/span[2]/button').get_attribute('purl')
         result["soundLink"] = soundLink
 
+        exampleText = driver.find_element_by_xpath('//*[@id="searchPage_example"]/div/div[1]/div[1]/span[1]').text
+        result["exampleText"] = exampleText
+
+        exampleKoreanText = driver.find_element_by_xpath('//*[@id="searchPage_example"]/div/div[1]/div[2]/p').text
+        result["exampleKoreanText"] = exampleKoreanText
+
     except NoSuchElementException:
         logging.info('%s 단어가 사전에 없습니다.' % url)
         result = None
 
-    return json.dumps(result, ensure_ascii=False)
+    return result
 
 def setWordDictionary(wordList, collectionName, crawler, targetUrl):
     dao.setCollection(collectionName)
@@ -66,7 +72,7 @@ def setWordDictionary(wordList, collectionName, crawler, targetUrl):
         if re.search('[a-zA-Z]', word):
             info = getCrawling(crawler, targetUrl + word)
             if info is not None:
-                dao.insert('{"word": "%s", "info": %s}' % (word, info))
+                dao.insert({"word": word, "info": info})
     dao.setClose()
 
 if __name__=="__main__":

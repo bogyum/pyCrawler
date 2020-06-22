@@ -12,9 +12,9 @@
   },
   "DEV": {
     "host": "localhost",
-    "port": "27017",
-    "id": "jarvis",
-    "pw": "qhrua0713!",
+    "port": "13306",
+    "id": "trendy",
+    "pw": "coffee",
     "database": "TrendyWord",
     "collections": {
       "wordcount": "WordCount",
