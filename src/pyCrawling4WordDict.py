@@ -34,28 +34,39 @@ def getWordList(dbConfig):
 
 def getCrawling(crawler, url):
 
-    result = {'meaning': [], 'pronounce': '', 'soundLink': '', 'exampleText': '', 'exampleKoreanText': ''}
+    result = {'meaning': {}, 'pronounce': '', 'soundLink': '', 'exampleText': '', 'exampleKoreanText': ''}
     try:
         driver = crawler.getWebDriver(url)
-
         # 의미 정보
-        contents = list(driver.find_element_by_xpath('//*[@id="searchPage_entry"]/div/div[1]/ul').find_elements_by_tag_name('li'))
-        for context in contents:
-            result["meaning"].append(str(context.text).replace('\n', ' '))
+        # bugfix/WDC001-MeanParsing
+        meanList = driver.find_elements_by_xpath('//*[@id="searchPage_entry"]/div/div[1]/ul')
+        for mean in meanList:
+            meanItems = mean.find_elements_by_tag_name('li')
+            for mean in meanItems:
+                tagName = str(mean.find_element_by_tag_name("p").find_element_by_tag_name("span").text).strip()
+                meanText = str(mean.find_element_by_tag_name("p").text).replace(tagName, '').replace('\n', ' ').strip()
+                if tagName in result["meaning"]:
+                    result["meaning"][tagName].append(meanText)
+                else:
+                    result["meaning"][tagName] = [meanText]
 
         # 발음 기호
         pronounce = driver.find_element_by_xpath('//*[@id="searchPage_entry"]/div/div[1]/div[1]/ul/li[1]/span[1]')
         result["pronounce"] = pronounce.text
 
-        # 음성 정보
-        soundLink = driver.find_element_by_xpath('//*[@id="searchPage_entry"]/div/div[1]/div[1]/ul/li[1]/span[2]/button').get_attribute('purl')
-        result["soundLink"] = soundLink
-
+        # 예제 문장
         exampleText = driver.find_element_by_xpath('//*[@id="searchPage_example"]/div/div[1]/div[1]/span[1]').text
         result["exampleText"] = exampleText
 
+        # 예제 문장 해석
         exampleKoreanText = driver.find_element_by_xpath('//*[@id="searchPage_example"]/div/div[1]/div[2]/p').text
         result["exampleKoreanText"] = exampleKoreanText
+
+        # 음성 정보
+        # bugfix/WDC001-MeanParsing :: 네이버 사전에서의 음성정보는 음성을 클릭시마다 암호화 key(lsa) 값을 요구하므로, 크롤링하는 것이 의미가 없음. 즉, 음성 정보 클릭 시 마다 이벤트가 발생해서, 해당 정보를 가져오는 방식임.
+        #  --> 이는 다음 사전을 크롤링하면 해결 가능함.
+        #  -->  다음 사전에서 음성 링크만 가져오기 위해 필드만 생성한 뒤 'None' 정보 입력. 후에 이러한 단어만 모아서, 다음 사전에서 크롤링 하면 될 듯 함.
+        result["soundLink"] = 'None'
 
     except NoSuchElementException:
         logging.info('%s 단어가 사전에 없습니다.' % url)

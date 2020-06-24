@@ -13,7 +13,8 @@
       "Target": "/result/NLP/%date"
     },
     "CrawlingDict" : {
-      "TargetUrl": "https://en.dict.naver.com/#/search?query="
+      "TargetUrl": "https://en.dict.naver.com/#/search?query=",
+      "TargetUrl4Sound": "https://dic.daum.net/search.do?q="
     }
   },
   "LOCAL": {
