@@ -2,6 +2,5 @@
 *.log
 *.bak
 
-resource/
 result/
 script/
