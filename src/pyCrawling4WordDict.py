@@ -5,6 +5,7 @@ import pyUtilsClass, pyCrawlerClass, pyDAOClass
 from selenium.common.exceptions import NoSuchElementException
 
 urlTimeWait = 3
+maxWordLen = 20
 dao = pyDAOClass.DAO()
 
 def setDBConnection(dbConfig):
@@ -81,9 +82,12 @@ def setWordDictionary(wordList, collectionName, crawler, targetUrl):
     for word in tqdm.tqdm(wordList):
         # 영문자가 포함되어 있을 경우에만..
         if re.search('[a-zA-Z]', word):
-            info = getCrawling(crawler, targetUrl + word)
-            if info is not None:
-                dao.insert({"word": word, "info": info})
+            word = word.replace(".", "")
+
+            if len(word) < maxWordLen:
+                info = getCrawling(crawler, targetUrl + word)
+                if info is not None:
+                    dao.insert({"word": word, "info": info})
     dao.setClose()
 
 if __name__=="__main__":
