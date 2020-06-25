@@ -19,7 +19,7 @@ class DAO:
 
     # 신규 데이터 삽입
     def insert(self, query):
-        self.collection.insert_one(query)
+        self.collection.insert_one(query, check_keys=False)
 
     # 데이터 조회
     def select(self, query, fieldCondition):
@@ -36,7 +36,7 @@ class DAO:
 
     # 데이터 갱신
     def update(self, query, condition):
-        self.collection.update(query, condition, upsert=True)
+        self.collection.update(query, condition, upsert=True, check_keys=False)
 
 
 
