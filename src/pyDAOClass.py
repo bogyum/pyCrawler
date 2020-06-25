@@ -19,7 +19,7 @@ class DAO:
 
     # 신규 데이터 삽입
     def insert(self, query):
-        self.collection.insert_one(query, check_keys=False)
+        self.collection.insert(query, check_keys=False)
 
     # 데이터 조회
     def select(self, query, fieldCondition):
