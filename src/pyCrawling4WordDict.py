@@ -17,12 +17,17 @@ def setDBConnection(dbConfig):
 def getWordList(dbConfig):
 
     logging.info("getWordList() - Generate crawling target word list")
-
     wordList = set()
     dao.setCollection(dbConfig["collections"]["wordcount"])
     wordList4Count = dao.selectMany({}, {"word": 1, "_id": 0})
     for info in wordList4Count:
-        wordList.add(info["word"])
+        # 영문자가 포함되어 있을 경우에만..
+        if re.search('[a-zA-Z]', info["word"]):
+            # json 양식 문제로 인한 '.' 삭제
+            word = info["word"].replace(".", "")
+            # 최대 길이가 maxWordLen(20) 을 넘지 않는 단어에 대해서만
+            if len(word) < maxWordLen:
+                wordList.add(word)
 
     dictWordList = set()
     dao.setCollection(dbConfig["collections"]["worddict"])
@@ -77,17 +82,11 @@ def getCrawling(crawler, url):
 
 def setWordDictionary(wordList, collectionName, crawler, targetUrl):
     dao.setCollection(collectionName)
-
     logging.info("setWordDictionary() - Crawling and save to TrendWord.WordDictioanry")
     for word in tqdm.tqdm(wordList):
-        # 영문자가 포함되어 있을 경우에만..
-        if re.search('[a-zA-Z]', word):
-            word = word.replace(".", "")
-
-            if len(word) < maxWordLen:
-                info = getCrawling(crawler, targetUrl + word)
-                if info is not None:
-                    dao.insert({"word": word, "info": info})
+        info = getCrawling(crawler, targetUrl + word)
+        if info is not None:
+            dao.insert({"word": word, "info": info})
     dao.setClose()
 
 if __name__=="__main__":
