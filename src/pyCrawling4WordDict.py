@@ -87,6 +87,9 @@ def setWordDictionary(wordList, collectionName, crawler, targetUrl):
         info = getCrawling(crawler, targetUrl + word)
         if info is not None:
             dao.insert({"word": word, "info": info})
+        else:
+            wordNotFoundMessage = 'Does not found the [%s] in dictionary' % word
+            dao.insert({"word": word, "info": {'meaning': {"None": wordNotFoundMessage}, 'pronounce': '', 'soundLink': '', 'exampleText': '', 'exampleKoreanText': ''}})
     dao.setClose()
 
 if __name__=="__main__":
